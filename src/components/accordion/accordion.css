@@ -9,7 +9,7 @@
 
 .name{
     padding-left: 30px;
-    padding-top: 10px;
+    padding-top: 5px;
 }
 
 .description{
@@ -17,6 +17,7 @@
 }
 
 .heading{
+    padding: 5px 0px;
     color: lightslategray;
     font-size: xx-small;
 }

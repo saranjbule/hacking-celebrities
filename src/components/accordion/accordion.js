@@ -12,7 +12,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 import "./accordion.css";
 
-function Accordions({ celebrity }) {
+function Accordions({ celebrity, remove }) {
   const [expanded, setExpanded] = useState(false);
   const [age, setAge] = useState(celebrity.dob);
   const [del, setDel] = useState(false);
@@ -35,20 +35,24 @@ function Accordions({ celebrity }) {
     setAge(ageCelebrity);
   };
 
-  const onDel = () => {
+  const onDelIcon= () => {
     setDel(true);
     setView(false);
   };
 
-  const onEdit = () => {
+  const onEditIcon = () => {
     setEdit(true);
     setView(false);
   };
 
-  const onCancel = () => {
+  const onCancelButton = () => {
     setDel(false);
     setView(true);
   };
+
+  const onDeleteButton = (id) => {
+    remove(id)
+  } 
 
   return (
     <>
@@ -60,7 +64,7 @@ function Accordions({ celebrity }) {
         >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Avatar alt={celebrity.first} src={celebrity.picture} />
-            <Typography className="name">{`${celebrity.first} ${celebrity.last}`}</Typography>
+            <Typography className="name" sx={{fontWeight: 550, fontSize:20 }}>{`${celebrity.first} ${celebrity.last}`}</Typography>
           </AccordionSummary>
           <AccordionDetails className="accordionDetails">
             <Grid
@@ -86,10 +90,10 @@ function Accordions({ celebrity }) {
               <Typography>{celebrity.description}</Typography>
             </div>
             <div className="iconEditDel">
-              <Button onClick={onDel}>
+              <Button onClick={onDelIcon}>
                 <DeleteForeverIcon className="deleteIcon" />
               </Button>
-              <Button onClick={onEdit}>
+              <Button onClick={onEditIcon}>
                 <EditIcon />
               </Button>
             </div>
@@ -101,7 +105,7 @@ function Accordions({ celebrity }) {
         <Accordion className="accordion">
           <AccordionDetails>
             <div className="closeIconContianer">
-              <Button onClick={onCancel}>
+              <Button onClick={onCancelButton}>
                 <CloseIcon className="closeIcon" />
               </Button>
             </div>
@@ -120,7 +124,7 @@ function Accordions({ celebrity }) {
                     backgroundColor: "black",
                   },
                 }}
-                onClick={onCancel}
+                onClick={onCancelButton}
               >
                 Cancel
               </Button>
@@ -134,6 +138,7 @@ function Accordions({ celebrity }) {
                     backgroundColor: "whitesmoke",
                   },
                 }}
+                onClick={() => onDeleteButton(celebrity.id)}
               >
                 Delete
               </Button>
