@@ -1,0 +1,47 @@
+.accordion{
+    width: 80%;
+    margin: 10px;
+}
+
+.accordionDetails{
+    margin: 0px 10px;
+}
+
+.name{
+    padding-left: 30px;
+    padding-top: 10px;
+}
+
+.description{
+    margin-top: 20px;
+}
+
+.heading{
+    color: lightslategray;
+    font-size: xx-small;
+}
+
+.iconEditDel{
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px 0px ;
+}
+
+.deleteIcon{
+    color: #ff2400;
+}
+
+.buttonCancelDel{
+    display: flex;
+    justify-content: flex-end;
+    margin: 20px 0px 10px;
+}
+
+.closeIconContianer{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.closeIcon{
+    color: black;
+}

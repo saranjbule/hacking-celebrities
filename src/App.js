@@ -1,8 +1,14 @@
-import './App.css';
+import React from "react";
+import "./App.css";
+import useGetData from "./hooks/useGetData";
+import Accordions from "./components/accordion/accordion";
 
 function App() {
+  const data = useGetData();
   return (
-    <h1>Hello Saranj</h1>
+    <div className="app">
+      {data && data.map((celebrity) => <Accordions key={celebrity.id} celebrity={celebrity} />)}
+    </div>
   );
 }
 
