@@ -46,3 +46,11 @@
 .closeIcon{
     color: black;
 }
+
+.saveIcon{
+    color: #32cd32;
+}
+
+.error{
+    margin-top: 20px;
+}

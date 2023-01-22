@@ -10,14 +10,29 @@ import Button from "@mui/material/Button";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import TextField from "@mui/material/TextField";
+import CancelIcon from "@mui/icons-material/Cancel";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import Alert from "@mui/material/Alert";
+import GenderLIst from "./genderList";
 import "./accordion.css";
 
-function Accordions({ celebrity, remove }) {
+function Accordions({ celebrity, remove, update }) {
+  const fullName = `${celebrity.first} ${celebrity.last}`;
   const [expanded, setExpanded] = useState(false);
   const [age, setAge] = useState(celebrity.dob);
+  const [gender, setGender] = useState(celebrity.gender);
+  const [description, setDescription] = useState(celebrity.description);
+  const [country, setCountry] = useState(celebrity.country);
+  const [name, setName] = useState(fullName);
+  const [nAge, setNAge] = useState();
   const [del, setDel] = useState(false);
   const [edit, setEdit] = useState(false);
   const [view, setView] = useState(true);
+  const [error, setError] = useState(false);
+  const [saveIcon, setSaveIcon] = useState(false);
 
   useEffect(() => {
     calculateAge();
@@ -35,14 +50,52 @@ function Accordions({ celebrity, remove }) {
     setAge(ageCelebrity);
   };
 
-  const onDelIcon= () => {
+  const onDelIcon = () => {
     setDel(true);
     setView(false);
   };
 
   const onEditIcon = () => {
-    setEdit(true);
-    setView(false);
+    if (age > 18) {
+      setEdit(true);
+      setView(false);
+      setCountry(celebrity.country);
+      setGender(celebrity.gender);
+      setDescription(celebrity.description);
+      if (celebrity.name) {
+        setName(name);
+      } else {
+        setName(`${celebrity.first} ${celebrity.last}`);
+      }
+      if (nAge) {
+        setNAge(nAge);
+      } else {
+        setNAge(age);
+      }
+    } else {
+      setError(true);
+      setTimeout(() => {
+        setError(false);
+      }, 3000);
+    }
+  };
+
+  const onCloseIcon = () => {
+    setView(true);
+    setEdit(false);
+    setSaveIcon(false);
+  };
+
+  const onSaveIcon = () => {
+    onCloseIcon();
+    const updatedContent = {
+      name: name,
+      age: nAge,
+      gender: gender,
+      country: country,
+      description: description,
+    };
+    update(celebrity.id, updatedContent);
   };
 
   const onCancelButton = () => {
@@ -51,8 +104,8 @@ function Accordions({ celebrity, remove }) {
   };
 
   const onDeleteButton = (id) => {
-    remove(id)
-  } 
+    remove(id);
+  };
 
   return (
     <>
@@ -64,7 +117,11 @@ function Accordions({ celebrity, remove }) {
         >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Avatar alt={celebrity.first} src={celebrity.picture} />
-            <Typography className="name" sx={{fontWeight: 550, fontSize:20 }}>{`${celebrity.first} ${celebrity.last}`}</Typography>
+            <Typography className="name" sx={{ fontWeight: 550, fontSize: 20 }}>
+              {celebrity.name
+                ? celebrity.name
+                : `${celebrity.first} ${celebrity.last}`}
+            </Typography>
           </AccordionSummary>
           <AccordionDetails className="accordionDetails">
             <Grid
@@ -74,7 +131,9 @@ function Accordions({ celebrity, remove }) {
             >
               <Grid item xs={4} md={3}>
                 <Typography className="heading">Age</Typography>
-                <Typography>{`${age} Years`}</Typography>
+                <Typography>
+                  {celebrity.age ? `${celebrity.age} Years` : `${age} Years`}
+                </Typography>
               </Grid>
               <Grid item xs={4} md={3}>
                 <Typography className="heading">Gender</Typography>
@@ -89,6 +148,13 @@ function Accordions({ celebrity, remove }) {
               <Typography className="heading">Description</Typography>
               <Typography>{celebrity.description}</Typography>
             </div>
+
+            {error && (
+              <Alert variant="outlined" className="error" severity="error">
+                User must be an adult
+              </Alert>
+            )}
+
             <div className="iconEditDel">
               <Button onClick={onDelIcon}>
                 <DeleteForeverIcon className="deleteIcon" />
@@ -96,6 +162,98 @@ function Accordions({ celebrity, remove }) {
               <Button onClick={onEditIcon}>
                 <EditIcon />
               </Button>
+            </div>
+          </AccordionDetails>
+        </Accordion>
+      )}
+
+      {edit && (
+        <Accordion expanded={true} className="accordion">
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Avatar alt={celebrity.first} src={celebrity.picture} />
+            <TextField
+              variant="outlined"
+              value={name}
+              sx={{ ml: 3 }}
+              onChange={(e) => {
+                setName(e.target.value);
+                setSaveIcon(true);
+              }}
+            />
+          </AccordionSummary>
+          <AccordionDetails className="accordionDetails">
+            <Grid
+              container
+              rowSpacing={1}
+              columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            >
+              <Grid item xs={4} md={3}>
+                <Typography className="heading">Age</Typography>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  value={nAge}
+                  type="number"
+                  onChange={(e) => {
+                    setNAge(e.target.value);
+                    setSaveIcon(true);
+                  }}
+                />
+              </Grid>
+              <Grid item xs={4} md={3}>
+                <Typography className="heading">Gender</Typography>
+                <Select
+                  fullWidth
+                  value={gender}
+                  onChange={(e) => {
+                    setGender(e.target.value);
+                    setSaveIcon(true);
+                  }}
+                >
+                  {GenderLIst.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.value}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Grid>
+              <Grid item xs={4} md={3}>
+                <Typography className="heading">Country</Typography>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  value={country}
+                  onChange={(e) => {
+                    setCountry(e.target.value);
+                    setSaveIcon(true);
+                  }}
+                />
+              </Grid>
+            </Grid>
+            <div className="description">
+              <Typography className="heading">Description</Typography>
+              <TextField
+                variant="outlined"
+                value={description}
+                onChange={(e) => {
+                  setDescription(e.target.value);
+                  setSaveIcon(true);
+                }}
+                fullWidth
+                multiline
+                rows={3}
+              />
+            </div>
+
+            <div className="iconEditDel">
+              <Button onClick={onCloseIcon}>
+                <CancelIcon className="deleteIcon" />
+              </Button>
+              {saveIcon && (
+                <Button onClick={onSaveIcon}>
+                  <CheckCircleOutlineIcon className="saveIcon" />
+                </Button>
+              )}
             </div>
           </AccordionDetails>
         </Accordion>

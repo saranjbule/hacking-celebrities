@@ -5,3 +5,7 @@
     align-items: center;
     flex-wrap: nowrap;
 }
+
+.search{
+    width: 80%;
+}
