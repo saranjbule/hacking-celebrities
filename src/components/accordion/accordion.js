@@ -19,9 +19,8 @@ import Alert from "@mui/material/Alert";
 import GenderLIst from "./genderList";
 import "./accordion.css";
 
-function Accordions({ celebrity, remove, update }) {
+function Accordions({ celebrity, remove, update, expanded, handleChange }) {
   const fullName = `${celebrity.first} ${celebrity.last}`;
-  const [expanded, setExpanded] = useState(false);
   const [age, setAge] = useState(celebrity.dob);
   const [gender, setGender] = useState(celebrity.gender);
   const [description, setDescription] = useState(celebrity.description);
@@ -37,10 +36,6 @@ function Accordions({ celebrity, remove, update }) {
   useEffect(() => {
     calculateAge();
   }, []);
-
-  const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
 
   const calculateAge = () => {
     const dobArr = age.split("-");

@@ -10,10 +10,15 @@ import "./App.css";
 function App() {
   const data = useGetData();
   const [celebrityData, setCelebrityData] = useState();
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     setCelebrityData(data);
   }, [data]);
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 
   const remove = (id) => {
     const newCelebrityData = celebrityData.filter(
@@ -52,6 +57,8 @@ function App() {
             celebrity={celebrity}
             remove={remove}
             update={update}
+            expanded={expanded}
+            handleChange={handleChange}
           />
         ))}
     </div>
